@@ -25,6 +25,8 @@ private:
     RobotCar robotCar;
     bool active;
 
+    int forwardFailCounter; // if car fails to drive forward three times in row drive backwards
+
 };
 
 #endif

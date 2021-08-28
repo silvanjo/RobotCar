@@ -11,4 +11,8 @@
 
 #define SERVO_PIN 10
 
+#define SERVO_LEFT 0
+#define SERVO_MIDDLE 90
+#define SERVO_RIGHT 180
+
 #define PINS_ITER for(int i = RIGHT_EN; i <= LEFT_BACKWARD ; i++)

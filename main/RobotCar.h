@@ -21,6 +21,7 @@ public:
     // movements
     void Forward();
     void Backward();
+    void Hold();
 
     // A time of 550 ms is ca. 90 degree turn
     void TurnLeft(float timer = 550);
@@ -42,7 +43,7 @@ private:
     unsigned int ussTrigPin;
     unsigned int ussEchoPin;
 
-    bool forward, backward;
+    bool forward, backward, hold;
 
     // motor pins
     unsigned int frontLeftEnablePin,  frontLeftForwardPin,  frontLeftBackwardPin;
