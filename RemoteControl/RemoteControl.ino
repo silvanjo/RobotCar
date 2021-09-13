@@ -28,23 +28,17 @@ void setup() {
   radio.setPALevel(RF24_PA_MIN);
   radio.stopListening();
 
-  Serial.begin(6900);
-
 }
 
 void loop() {
-  
-  if (digitalRead(BUTTON_1))
-    data.button1 = BUTTON_PRESSED
-  if (digitalRead(BUTTON_2))
-    data.button2 = BUTTON_PRESSED
-  if (digitalRead(BUTTON_3))
-    data.button3 = BUTTON_PRESSED
-  if (digitalRead(BUTTON_4))
-    data.button4 = BUTTON_PRESSED
-    
-  radio.write(&data, sizeof(RCData)); 
 
-  delay(1000);
+  data.button1 = digitalRead(BUTTON_1);
+  data.button2 = digitalRead(BUTTON_2);
+  data.button3 = digitalRead(BUTTON_3);
+  data.button4 = digitalRead(BUTTON_4);
+  
+  radio.write(&data, sizeof(RCData));   
+
+  delay(50);
 
 }

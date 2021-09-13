@@ -8,7 +8,7 @@ RobotCarController::RobotCarController
     unsigned int rre, unsigned int rrf, unsigned int rrb,
     unsigned int rle, unsigned int rlf, unsigned int rlb,    
     unsigned int servoPin, unsigned int trigPin, unsigned int echoPin,
-    int CE_pin, int CSN_pin, char address[NRF24L01_ADDRESS_LENGTH_STR]
+    int CE_pin, int CSN_pin, byte address[NRF24L01_ADDRESS_LENGTH_STR]
 ) 
     : robotCar 
     (
@@ -92,15 +92,11 @@ void RobotCarController::StartObstacleAvoidingProtocol()
             }
             else if (distanceLeft > distanceRight)
             {
-
                 RobotCarController::robotCar.TurnLeft();
-
             }
             else 
             {
-
                 RobotCarController::robotCar.TurnRight();
-
             }
 
 
@@ -114,5 +110,66 @@ void RobotCarController::StartObstacleAvoidingProtocol()
         }
 
     }
+
+    RobotCarController::robotCar.EnableMotors(false);
+
+}
+
+void RobotCarController::StartRemoteControlProtocol() 
+{
+
+    RobotCarController::active = true;
+    RobotCarController::robotCar.EnableMotors(true);
+
+    while(RobotCarController::active)
+    {
+
+        if (RobotCarController::receiver.available())
+        {
+            Serial.println("Data available");
+
+            // delay(1000);
+
+            Serial.print(rc_data.button1);
+            Serial.print(rc_data.button2);
+            Serial.print(rc_data.button3);
+            Serial.print(rc_data.button4);
+            Serial.print("\n");
+
+            RobotCarController::receiver.read(&(RobotCarController::rc_data), sizeof(RCData));
+            Serial.println("--------------");
+        }
+
+
+        if (RobotCarController::rc_data.button1)
+        {
+            Serial.println("Button 1 pressed");
+            RobotCarController::robotCar.Forward();
+        }
+        else if (RobotCarController::rc_data.button3)
+        {
+            Serial.println("Button 3 pressed");
+            RobotCarController::robotCar.Backward();
+        }
+        else if (RobotCarController::rc_data.button2)
+        {
+            Serial.println("Button 2 pressed");
+            RobotCarController::robotCar.TurnLeft();
+        }
+        else if (RobotCarController::rc_data.button4)
+        {
+            Serial.println("Button 4 pressed");
+            RobotCarController::robotCar.TurnRight();
+        }
+        else 
+        {
+            Serial.println("Hold");  
+            RobotCarController::robotCar.Hold();
+        }
+
+
+    }
+
+    // RobotCarController::robotCar.EnableMotors(false);
 
 }

@@ -1,6 +1,6 @@
-#define RIGHT_EN 1
-#define RIGHT_FORWARD 2
-#define RIGHT_BACKWARD 3
+#define RIGHT_EN A0
+#define RIGHT_FORWARD A1
+#define RIGHT_BACKWARD A2
 
 #define LEFT_EN 4
 #define LEFT_FORWARD 5
@@ -11,9 +11,5 @@
 
 #define SERVO_PIN 10
 
-#define SERVO_LEFT 0
-#define SERVO_MIDDLE 90
-#define SERVO_RIGHT 180
-
-#define NRF24L01_ADDRESS_LENGTH 5
-#define NRF24L01_ADDRESS_LENGTH_STR NRF24L01_ADDRESS_LENGTH + 1 
+#define CE  2
+#define CSN 3
