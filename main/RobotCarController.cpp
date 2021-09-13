@@ -1,5 +1,5 @@
 #include "RobotCarController.h"
-#include "defines.h"
+
 
 RobotCarController::RobotCarController
 (
@@ -7,7 +7,8 @@ RobotCarController::RobotCarController
     unsigned int fre, unsigned int frf, unsigned int frb,
     unsigned int rre, unsigned int rrf, unsigned int rrb,
     unsigned int rle, unsigned int rlf, unsigned int rlb,    
-    unsigned int servoPin, unsigned int trigPin, unsigned int echoPin
+    unsigned int servoPin, unsigned int trigPin, unsigned int echoPin,
+    int CE_pin, int CSN_pin, char address[NRF24L01_ADDRESS_LENGTH_STR]
 ) 
     : robotCar 
     (
@@ -16,11 +17,28 @@ RobotCarController::RobotCarController
         rre, rrf, rrb,
         rle, rlf, rlb,
         servoPin, trigPin, echoPin
-    )
+    ),
+      receiver(CE_pin, CSN_pin)
 {
 
     RobotCarController::active = false;
     RobotCarController::forwardFailCounter = 0;
+    
+    // Setup the receiver (NRF24L01)
+    RobotCarController::CE_pin  = CE_pin;
+    RobotCarController::CSN_pin = CSN_pin;
+    strncpy(RobotCarController::address, address, NRF24L01_ADDRESS_LENGTH_STR);
+
+    if (CE_pin != -1 && CSN_pin != -1) 
+    {
+
+        RobotCarController::receiver.begin();
+        RobotCarController::receiver.openReadingPipe(0, RobotCarController::address);
+        RobotCarController::receiver.setPALevel(RF24_PA_MIN);
+        RobotCarController::receiver.startListening();
+
+    }
+    // -------------
 
 }
 
