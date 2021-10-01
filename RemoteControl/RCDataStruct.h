@@ -14,10 +14,10 @@ struct RCData
     uint8_t button5;
     uint8_t button6;
 
-    int32_t joy_x_val;
-    int32_t joy_y_val;
+    uint32_t joy_x_val;
+    unt32_t joy_y_val;
 
-    int32_t rotary_switch;
+    int32_t rotary_switch_val = 0;
 
 };
 

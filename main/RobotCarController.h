@@ -30,7 +30,7 @@ public:
         unsigned int rre, unsigned int rrf, unsigned int rrb,
         unsigned int rle, unsigned int rlf, unsigned int rlb,    
         unsigned int servoPin, unsigned int trigPin, unsigned int echoPin,
-         int CE_pin = -1, int CSN_pin = -1, byte address[NRF24L01_ADDRESS_LENGTH_STR] = "00000"
+        int CE_pin = -1, int CSN_pin = -1, byte address[NRF24L01_ADDRESS_LENGTH_STR] = "00000"
     );
 
     void StartObstacleAvoidingProtocol();
@@ -41,7 +41,8 @@ private:
     RobotCar robotCar;
     bool active;
 
-    int forwardFailCounter; // if car fails to drive forward three times in row drive backwards
+    int forwardFailCounter;         // if car fails to drive forward three times in row drive backwards
+    int turn90DegreeTimer = 500;    // in ms
 
     RF24 receiver;
     int CE_pin;

@@ -23,9 +23,8 @@ public:
     void Backward();
     void Hold();
 
-    // A time of 550 ms is ca. 90 degree turn
-    void TurnLeft(float timer = 550);
-    void TurnRight(float timer = 550);
+    void TurnLeft(float timer = 0);
+    void TurnRight(float timer = 0);
 
     void EnableMotors(bool enable);
 

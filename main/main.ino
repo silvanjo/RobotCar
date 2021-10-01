@@ -24,12 +24,6 @@ void setup() {
       SERVO_PIN, USS_TRIG_PIN,  USS_ECHO_PIN,
       CE,        CSN,           "00001"
     );
-
-  // Setup radio module
-  radio.begin();
-  radio.openReadingPipe(0, address);
-  radio.setPALevel(RF24_PA_MIN);
-  radio.startListening();
   
 }
 
