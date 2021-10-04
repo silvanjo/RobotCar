@@ -161,7 +161,7 @@ void RobotCar::TurnLeft(float timer)
 
     digitalWrite(RobotCar::rearLeftForwardPin,    false);
     digitalWrite(RobotCar::rearLeftBackwardPin,   true);
-
+delay(10);
     if (timer == 0)
         delay(10);
     else
@@ -188,7 +188,7 @@ void RobotCar::TurnRight(float timer)
 
     digitalWrite(RobotCar::rearLeftForwardPin,    true);
     digitalWrite(RobotCar::rearLeftBackwardPin,   false);
-
+delay(10);
     if (timer == 0)
         delay(10);
     else

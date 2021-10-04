@@ -128,24 +128,20 @@ void RobotCarController::StartRemoteControlProtocol()
         {
             RobotCarController::receiver.read(&(RobotCarController::rc_data), sizeof(RCData));
         }
-        else 
-        {
-            RobotCarController::robotCar.Hold();
-        }
 
-        if (RobotCarController::rc_data.button1)
+        if (RobotCarController::rc_data.button1 || rc_data.button5 || rc_data.button6 || rc_data.joy_x_val > 800)
         {
             RobotCarController::robotCar.Forward();
         }
-        else if (RobotCarController::rc_data.button3)
+        else if (RobotCarController::rc_data.button3 || rc_data.joy_x_val < 300)
         {
             RobotCarController::robotCar.Backward();
         }
-        else if (RobotCarController::rc_data.button2)
+        else if (RobotCarController::rc_data.button2 || rc_data.joy_y_val > 800)
         {
             RobotCarController::robotCar.TurnLeft();
         }
-        else if (RobotCarController::rc_data.button4)
+        else if (RobotCarController::rc_data.button4 || rc_data.joy_y_val < 300)
         {
             RobotCarController::robotCar.TurnRight();
         }

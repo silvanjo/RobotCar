@@ -12,7 +12,7 @@
 #include "Arduino.h"
 #include "defines.h"
 
-#include "C:\Users\Silvan Josten\Desktop\Arduino\RobotCar\RemoteControl\RCDataStruct.h" // TODO: relative path
+#include "C:/Users/silva/Desktop/REPO/RobotCar/RemoteControl/RCDataStruct.h" // TODO: relative path
 
 #include <SPI.h>
 #include <nRF24L01.h>
