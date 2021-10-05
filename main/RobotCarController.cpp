@@ -21,7 +21,7 @@ RobotCarController::RobotCarController
       receiver(CE_pin, CSN_pin)
 {
 
-    RobotCarController::active = false;
+    RobotCarController::active = true;
     RobotCarController::forwardFailCounter = 0;
     
     // Setup the receiver (NRF24L01)
@@ -32,71 +32,121 @@ RobotCarController::RobotCarController
     if (CE_pin != -1 && CSN_pin != -1) 
     {
 
-        RobotCarController::receiver.begin();
-        RobotCarController::receiver.openReadingPipe(0, RobotCarController::address);
-        RobotCarController::receiver.setPALevel(RF24_PA_MIN);
-        RobotCarController::receiver.startListening();
+        receiver.begin();
+        receiver.openReadingPipe(0, address);
+        receiver.setPALevel(RF24_PA_MIN);
+        receiver.startListening();
 
     }
     // -------------
 
+    button5Pressed = false;
+
+    currentMode = RobotCarModes::REMOTE_CONTROL;
+
+}
+
+void RobotCarController::Start() 
+{
+    while (active)
+    {
+        switch(currentMode)
+        {
+            case RobotCarModes::OBASTACLE_AVOIDING:
+                StartObstacleAvoidingProtocol();
+            break;
+            case RobotCarModes::REMOTE_CONTROL:
+                StartRemoteControlProtocol();
+            break;
+        };
+    }
+}
+
+bool RobotCarController::ReceiveData()
+{
+    if (receiver.available())
+    {
+        receiver.read(&rc_data, sizeof(RCData));
+        return true;
+    }
+
+    return false;
 }
 
 void RobotCarController::StartObstacleAvoidingProtocol()
 {
 
-    RobotCarController::active = true;
-    RobotCarController::robotCar.EnableMotors(true);
+    robotCar.EnableMotors(true);
 
-    while (RobotCarController::active) 
+    while (currentMode == RobotCarModes::OBASTACLE_AVOIDING) 
     {
 
-        int distance = RobotCarController::robotCar.GetDistance();
+        ReceiveData();
+
+        if (rc_data.button5 && !button5Pressed) 
+        {
+            button5Pressed = true;
+
+            currentMode = RobotCarModes::REMOTE_CONTROL;
+            break;
+        }
+        else if (button5Pressed && !rc_data.button5)
+        {
+            button5Pressed = false;
+        }
+
+        int distance = robotCar.GetDistance();
 
         if (distance <= 25) 
         {
 
-            RobotCarController::forwardFailCounter++;
+            forwardFailCounter++;
 
-            if (RobotCarController::forwardFailCounter >= 3) 
+            if (forwardFailCounter >= 3) 
             {
 
-                RobotCarController::robotCar.Backward();
+                robotCar.Backward();
                 delay(2000);
 
             }
 
-            RobotCarController::robotCar.Hold();
+            robotCar.Hold();
 
-            RobotCarController::robotCar.TurnServo(SERVO_LEFT);
+            robotCar.TurnServo(SERVO_LEFT);
 
             delay(900);
 
-            int distanceLeft = RobotCarController::robotCar.GetDistance();
+            int distanceLeft = robotCar.GetDistance();
 
-            RobotCarController::robotCar.TurnServo(SERVO_RIGHT);
+            robotCar.TurnServo(SERVO_RIGHT);
 
             delay(1400);
 
-            int distanceRight = RobotCarController::robotCar.GetDistance();
+            int distanceRight = robotCar.GetDistance();
 
-            RobotCarController::robotCar.TurnServo(SERVO_MIDDLE);
+            robotCar.TurnServo(SERVO_MIDDLE);
 
             if (distanceLeft <= 25 && distanceRight <= 25)
             {
 
-                RobotCarController::robotCar.Backward();
+                robotCar.Backward();
                 delay(2000);
-                RobotCarController::robotCar.TurnRight(RobotCarController::turn90DegreeTimer);
+                robotCar.TurnRight();
+                delay(turn90DegreeTimer);
+                robotCar.Hold();
 
             }
             else if (distanceLeft > distanceRight)
             {
-                RobotCarController::robotCar.TurnLeft(RobotCarController::turn90DegreeTimer);
+                robotCar.TurnLeft();
+                delay(turn90DegreeTimer);
+                robotCar.Hold();
             }
             else 
             {
-                RobotCarController::robotCar.TurnRight(RobotCarController::turn90DegreeTimer);
+                robotCar.TurnRight();
+                delay(turn90DegreeTimer);
+                robotCar.Hold();
             }
 
 
@@ -104,62 +154,62 @@ void RobotCarController::StartObstacleAvoidingProtocol()
         else 
         {
 
-            RobotCarController::robotCar.Forward();
-            RobotCarController::forwardFailCounter = 0;
+            robotCar.Forward();
+            forwardFailCounter = 0;
 
         }
 
     }
 
-    RobotCarController::robotCar.EnableMotors(false);
+    robotCar.EnableMotors(false);
 
 }
 
 void RobotCarController::StartRemoteControlProtocol() 
 {
 
-    RobotCarController::active = true;
-    RobotCarController::robotCar.EnableMotors(true);
+    robotCar.EnableMotors(true);
 
-    while(RobotCarController::active)
+    while(currentMode == RobotCarModes::REMOTE_CONTROL)
     {
 
-        if (RobotCarController::receiver.available())
+        ReceiveData();
+
+        if (rc_data.button5 && !button5Pressed) 
         {
-            RobotCarController::receiver.read(&(RobotCarController::rc_data), sizeof(RCData));
+            button5Pressed = true;
+
+            currentMode = RobotCarModes::OBASTACLE_AVOIDING;
+            break;
+        }
+        else if (button5Pressed && !rc_data.button5)
+        {
+            button5Pressed = false;
         }
 
-        if (RobotCarController::rc_data.button1 || rc_data.button5 || rc_data.button6 || rc_data.joy_x_val > 800)
+        if (rc_data.button1 || rc_data.joy_y_val < 300)
         {
-            RobotCarController::robotCar.Forward();
+            robotCar.Forward();
         }
-        else if (RobotCarController::rc_data.button3 || rc_data.joy_x_val < 300)
+        else if (rc_data.button3 || rc_data.joy_y_val > 800)
         {
-            RobotCarController::robotCar.Backward();
+            robotCar.Backward();
         }
-        else if (RobotCarController::rc_data.button2 || rc_data.joy_y_val > 800)
+        else if (rc_data.button2 || rc_data.joy_x_val < 300)
         {
-            RobotCarController::robotCar.TurnLeft();
+            robotCar.TurnLeft();
         }
-        else if (RobotCarController::rc_data.button4 || rc_data.joy_y_val < 300)
+        else if (rc_data.button4 || rc_data.joy_x_val > 800)
         {
-            RobotCarController::robotCar.TurnRight();
+            robotCar.TurnRight();
         }
         else 
         {
-            RobotCarController::robotCar.Hold();
+            robotCar.Hold();
         }
-
-        Serial.println("-----------------------------");
-        Serial.print("Joy_x: ");
-        Serial.println(RobotCarController::rc_data.joy_x_val);
-        Serial.print("Joy_y: ");
-        Serial.println(RobotCarController::rc_data.joy_y_val);
-        Serial.print("Rot_val: ");
-        Serial.println(RobotCarController::rc_data.rotary_switch_val);
 
     }
 
-    RobotCarController::robotCar.EnableMotors(false);
+    robotCar.EnableMotors(false);
 
 }

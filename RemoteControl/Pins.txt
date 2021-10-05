@@ -1,0 +1,19 @@
+D2  - NRF24 CSN
+D3  - NRF24 CE
+D4  - Joystick SW
+D5  - button1
+D6  - button2
+D7  - button3
+D8  - button4
+D9  - button5
+D10 - /
+D11 - NRF24 MOSI (SPI)
+D12 - NRF24 MISO (SPI)
+D13 - NRF24 SCK  (SPI - Clock)
+
+A0  - Joystick x-Achse
+A1  - Joystick y-Achse
+A2  - 
+A3  -
+A4  -
+A5  - button6

@@ -12,9 +12,6 @@ RobotCar::RobotCar(
 
     RobotCar::servoAngle = 90;
     RobotCar::servoPin   = servoPin;
-    RobotCar::forward    = false;
-    RobotCar::backward   = false;
-    RobotCar::hold       = true;
     
     // init motors
     RobotCar::frontLeftEnablePin    = fle;
@@ -68,24 +65,22 @@ RobotCar::RobotCar(
 void RobotCar::Forward() 
 {
 
-    if (!RobotCar::forward)
+    if (currentAction != RobotCarActions::FORWARD)
     {
 
-        RobotCar::forward  = true;
-        RobotCar::backward = false;
-        RobotCar::hold     = false;
+       currentAction = RobotCarActions::FORWARD;
 
-        digitalWrite(RobotCar::frontLeftForwardPin,   true);
-        digitalWrite(RobotCar::frontLeftBackwardPin,  false);
+        digitalWrite(frontLeftForwardPin,   true);
+        digitalWrite(frontLeftBackwardPin,  false);
 
-        digitalWrite(RobotCar::frontRightForwardPin,  true);
-        digitalWrite(RobotCar::frontRightBackwardPin, false);
+        digitalWrite(frontRightForwardPin,  true);
+        digitalWrite(frontRightBackwardPin, false);
 
-        digitalWrite(RobotCar::rearRightForwardPin,   true);
-        digitalWrite(RobotCar::rearRightBackwardPin,  false);
+        digitalWrite(rearRightForwardPin,   true);
+        digitalWrite(rearRightBackwardPin,  false);
 
-        digitalWrite(RobotCar::rearLeftForwardPin,    true);
-        digitalWrite(RobotCar::rearLeftBackwardPin,   false);
+        digitalWrite(rearLeftForwardPin,    true);
+        digitalWrite(rearLeftBackwardPin,   false);
 
     }
 
@@ -95,24 +90,22 @@ void RobotCar::Forward()
 void RobotCar::Backward() 
 {
 
-    if (!RobotCar::backward) 
+    if (currentAction != RobotCarActions::BACKWARD) 
     {
 
-        RobotCar::forward  = false;
-        RobotCar::backward = true;
-        RobotCar::hold     = false;
+        currentAction = RobotCarActions::BACKWARD;
 
-        digitalWrite(RobotCar::frontLeftForwardPin,   false);
-        digitalWrite(RobotCar::frontLeftBackwardPin,  true);
+        digitalWrite(frontLeftForwardPin,   false);
+        digitalWrite(frontLeftBackwardPin,  true);
 
-        digitalWrite(RobotCar::frontRightForwardPin,  false);
-        digitalWrite(RobotCar::frontRightBackwardPin, true);
+        digitalWrite(frontRightForwardPin,  false);
+        digitalWrite(frontRightBackwardPin, true);
 
-        digitalWrite(RobotCar::rearRightForwardPin,   false);
-        digitalWrite(RobotCar::rearRightBackwardPin,  true);
+        digitalWrite(rearRightForwardPin,   false);
+        digitalWrite(rearRightBackwardPin,  true);
 
-        digitalWrite(RobotCar::rearLeftForwardPin,    false);
-        digitalWrite(RobotCar::rearLeftBackwardPin,   true);
+        digitalWrite(rearLeftForwardPin,    false);
+        digitalWrite(rearLeftBackwardPin,   true);
 
 
     }
@@ -123,90 +116,81 @@ void RobotCar::Backward()
 void RobotCar::Hold() 
 {
 
-    if (!RobotCar::hold) 
+    if (currentAction != RobotCarActions::HOLD) 
     {
-
-        RobotCar::forward  = false;
-        RobotCar::backward = false;
-        RobotCar::hold     = true;
+        
+        currentAction = RobotCarActions::HOLD;
     
-        digitalWrite(RobotCar::frontLeftForwardPin,   false);
-        digitalWrite(RobotCar::frontLeftBackwardPin,  false);
+        digitalWrite(frontLeftForwardPin,   false);
+        digitalWrite(frontLeftBackwardPin,  false);
 
-        digitalWrite(RobotCar::frontRightForwardPin,  false);
-        digitalWrite(RobotCar::frontRightBackwardPin, false);
+        digitalWrite(frontRightForwardPin,  false);
+        digitalWrite(frontRightBackwardPin, false);
 
-        digitalWrite(RobotCar::rearRightForwardPin,   false);
-        digitalWrite(RobotCar::rearRightBackwardPin,  false);
+        digitalWrite(rearRightForwardPin,   false);
+        digitalWrite(rearRightBackwardPin,  false);
 
-        digitalWrite(RobotCar::rearLeftForwardPin,    false);
-        digitalWrite(RobotCar::rearLeftBackwardPin,   false);
+        digitalWrite(rearLeftForwardPin,    false);
+        digitalWrite(rearLeftBackwardPin,   false);
 
     }
 
 
 }
 
-void RobotCar::TurnLeft(float timer) 
+void RobotCar::TurnLeft() 
 {
 
-    digitalWrite(RobotCar::frontRightForwardPin,  true);
-    digitalWrite(RobotCar::frontRightBackwardPin, false);
-
-    digitalWrite(RobotCar::rearRightForwardPin,   true);
-    digitalWrite(RobotCar::rearRightBackwardPin,  false);
-
-    digitalWrite(RobotCar::frontLeftForwardPin,   false);
-    digitalWrite(RobotCar::frontLeftBackwardPin,  true);
-
-    digitalWrite(RobotCar::rearLeftForwardPin,    false);
-    digitalWrite(RobotCar::rearLeftBackwardPin,   true);
-delay(10);
-    if (timer == 0)
-        delay(10);
-    else
-        delay(timer);
-
-    digitalWrite(RobotCar::frontRightForwardPin,  false);
-    digitalWrite(RobotCar::rearRightForwardPin,   false);
-    digitalWrite(RobotCar::frontLeftBackwardPin,  false);
-    digitalWrite(RobotCar::rearLeftBackwardPin,   false);
+    if(currentAction != RobotCarActions::TURN_LEFT)
+    {
+        
+        currentAction = RobotCarActions::TURN_LEFT;
     
+        digitalWrite(frontRightForwardPin,  true);
+        digitalWrite(frontRightBackwardPin, false);
+
+        digitalWrite(rearRightForwardPin,   true);
+        digitalWrite(rearRightBackwardPin,  false);
+
+        digitalWrite(frontLeftForwardPin,   false);
+        digitalWrite(frontLeftBackwardPin,  true);
+
+        digitalWrite(rearLeftForwardPin,    false);
+        digitalWrite(rearLeftBackwardPin,   true);
+
+    }
+
 }
 
-void RobotCar::TurnRight(float timer) 
+void RobotCar::TurnRight() 
 {
+    if(currentAction != RobotCarActions::TURN_RIGHT)
+    {
+        
+        currentAction = RobotCarActions::TURN_RIGHT;
 
-    digitalWrite(RobotCar::frontRightForwardPin,  false);
-    digitalWrite(RobotCar::frontRightBackwardPin, true);
+        digitalWrite(frontRightForwardPin,  false);
+        digitalWrite(frontRightBackwardPin, true);
 
-    digitalWrite(RobotCar::rearRightForwardPin,   false);
-    digitalWrite(RobotCar::rearRightBackwardPin,  true);
+        digitalWrite(rearRightForwardPin,   false);
+        digitalWrite(rearRightBackwardPin,  true);
 
-    digitalWrite(RobotCar::frontLeftForwardPin,   true);
-    digitalWrite(RobotCar::frontLeftBackwardPin,  false);
+        digitalWrite(frontLeftForwardPin,   true);
+        digitalWrite(frontLeftBackwardPin,  false);
 
-    digitalWrite(RobotCar::rearLeftForwardPin,    true);
-    digitalWrite(RobotCar::rearLeftBackwardPin,   false);
-delay(10);
-    if (timer == 0)
-        delay(10);
-    else
-        delay(timer);
-
-    digitalWrite(RobotCar::frontRightBackwardPin, false);
-    digitalWrite(RobotCar::rearRightBackwardPin,  false);
-    digitalWrite(RobotCar::frontLeftForwardPin,   false);
-    digitalWrite(RobotCar::rearLeftForwardPin,    false);
+        digitalWrite(rearLeftForwardPin,    true);
+        digitalWrite(rearLeftBackwardPin,   false);
+    
+    }
     
 }
 
 void RobotCar::EnableMotors(bool enable) {
 
-    digitalWrite(RobotCar::frontLeftEnablePin,  enable);
-    digitalWrite(RobotCar::frontRightEnablePin, enable);
-    digitalWrite(RobotCar::rearRightEnablePin,  enable);
-    digitalWrite(RobotCar::rearLeftEnablePin,   enable);
+    digitalWrite(frontLeftEnablePin,  enable);
+    digitalWrite(frontRightEnablePin, enable);
+    digitalWrite(rearRightEnablePin,  enable);
+    digitalWrite(rearLeftEnablePin,   enable);
 
 }
 
@@ -215,8 +199,8 @@ void RobotCar::TurnServo(unsigned int angle)
 
     if (angle >= 0 && angle <= 180) {
         
-        RobotCar::servoAngle = angle;
-        RobotCar::servo.write(RobotCar::servoAngle);
+        servoAngle = angle;
+        servo.write(servoAngle);
 
     }
 
@@ -225,6 +209,6 @@ void RobotCar::TurnServo(unsigned int angle)
 int RobotCar::GetDistance() 
 {
 
-    return RobotCar::ultrasonicSensor.GetDistance();
+    return ultrasonicSensor.GetDistance();
 
 }

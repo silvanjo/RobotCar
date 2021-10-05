@@ -6,6 +6,16 @@
 
 #include "UltrasonicSensor.h"
 
+enum RobotCarActions 
+{
+    FORWARD,
+    BACKWARD,
+    TURN_RIGHT,
+    TURN_LEFT,
+    HOLD,
+    OFF
+};
+
 class RobotCar {
 
 public:
@@ -23,8 +33,8 @@ public:
     void Backward();
     void Hold();
 
-    void TurnLeft(float timer = 0);
-    void TurnRight(float timer = 0);
+    void TurnLeft();
+    void TurnRight();
 
     void EnableMotors(bool enable);
 
@@ -42,13 +52,13 @@ private:
     unsigned int ussTrigPin;
     unsigned int ussEchoPin;
 
-    bool forward, backward, hold;
-
     // motor pins
     unsigned int frontLeftEnablePin,  frontLeftForwardPin,  frontLeftBackwardPin;
     unsigned int frontRightEnablePin, frontRightForwardPin, frontRightBackwardPin;
     unsigned int rearRightEnablePin,  rearRightForwardPin,  rearRightBackwardPin;
     unsigned int rearLeftEnablePin,   rearLeftForwardPin,   rearLeftBackwardPin;
+
+    RobotCarActions currentAction;
 
 };
 

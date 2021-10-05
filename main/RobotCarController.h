@@ -1,9 +1,9 @@
 #ifndef ROBOTCAR_CONTROLLER_HEADER
 #define ROBOTCAR_CONTROLLER_HEADER
 
-#define SERVO_LEFT 0
+#define SERVO_RIGHT 0
 #define SERVO_MIDDLE 90
-#define SERVO_RIGHT 180
+#define SERVO_LEFT 180
 
 #define NRF24L01_ADDRESS_LENGTH 5
 #define NRF24L01_ADDRESS_LENGTH_STR NRF24L01_ADDRESS_LENGTH + 1 
@@ -12,11 +12,17 @@
 #include "Arduino.h"
 #include "defines.h"
 
-#include "C:/Users/silva/Desktop/REPO/RobotCar/RemoteControl/RCDataStruct.h" // TODO: relative path
+#include "C:/Users/Silvan Josten/Desktop/Arduino/RobotCar/RemoteControl/RCDataStruct.h" // TODO: relative path
 
 #include <SPI.h>
 #include <nRF24L01.h>
 #include <RF24.h>
+
+enum RobotCarModes 
+{
+    REMOTE_CONTROL,
+    OBASTACLE_AVOIDING,
+};
 
 class RobotCarController 
 {
@@ -33,8 +39,11 @@ public:
         int CE_pin = -1, int CSN_pin = -1, byte address[NRF24L01_ADDRESS_LENGTH_STR] = "00000"
     );
 
+    void Start();
     void StartObstacleAvoidingProtocol();
     void StartRemoteControlProtocol();
+
+    bool ReceiveData();
 
 private:
 
@@ -50,6 +59,10 @@ private:
     byte address[NRF24L01_ADDRESS_LENGTH_STR];
 
     RCData rc_data;
+
+    RobotCarModes currentMode;
+
+    bool button5Pressed;
 
 };
 

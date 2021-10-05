@@ -5,15 +5,15 @@
 
 #include "RCDataStruct.h"
 
-#define CE  2
-#define CSN 3
+#define CE  3
+#define CSN 2
 
 #define BUTTON_1 5
 #define BUTTON_2 6
 #define BUTTON_3 7
 #define BUTTON_4 8
 #define BUTTON_5 9
-#define BUTTON_6 A5
+#define BUTTON_6 A3
 
 #define JOY_X_PIN A0
 #define JOY_Y_PIN A1
@@ -53,10 +53,12 @@ void setup() {
   // -------------
 
   Serial.begin(9600);
+  Serial.println("Start Remote Control");
 
 }
 
 void loop() {
+  
 
   // Buttons
   data.button1 = digitalRead(BUTTON_1);
@@ -98,35 +100,6 @@ void loop() {
   
   radio.write(&data, sizeof(RCData));   
 
-  // delay(5);
-
-  Serial.print("Button 1: ");
-  Serial.println(data.button1);
+  delay(5);
   
-  Serial.print("Button 2: ");
-  Serial.println(data.button2);
-  
-  Serial.print("Button 3: ");
-  Serial.println(data.button3);
-  
-  Serial.print("Button 4: ");
-  Serial.println(data.button4);
-  
-  Serial.print("Button 5: ");
-  Serial.println(data.button5);
-  
-  Serial.print("Button 6: ");
-  Serial.println(data.button6);
-  
-  Serial.print("Rot: ");
-  Serial.println(data.rotary_switch_val);
-  
-  Serial.print("X: ");
-  Serial.println(data.joy_x_val);
-  
-  Serial.print("Y: ");
-  Serial.println(data.joy_y_val);
-
-  Serial.println("--------------------");
-
 }
